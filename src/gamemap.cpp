@@ -135,6 +135,7 @@ void GameMap::clearProperty(const QPoint& p) {
 void GameMap::load(QTextStream& in) {
   int n = 0;
   while (n < m_height && !in.atEnd()) {
+      qDebug() << "row" << n;
     QString line = in.readLine();
 
     if (line[0] == '#') {

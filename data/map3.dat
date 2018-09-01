@@ -1,0 +1,551 @@
+# Heebo game map set.
+# width
+13
+# height
+5
+# number of maps
+19
+# map1
+0000000000000
+0000000000000
+0000000000000
+0000000000000
+0000000000000
+# map2
+8000000000008
+W60000000004W
+W60000000004W
+W60000000004W
+2000000000002
+# map3
+W60000000004W
+W60000000004W
+-00000000000-
+W90000000007W
+WW600000004WW
+# map4
+0000000000000
+0000000000000
+8800000000088
+WW600000004WW
+2200000000022
+# map5
+04W600004W600
+00-000000-000
+04W900004W900
+04WW60004WW60
+0022000002200
+# map6
+0800800080080
+4W64W604W64W6
+4W64W604W64W6
+4W64W604W64W6
+4W64W604W64W6
+# map7
+0800800080080
+4W64W604W64W6
+8200280820028
+W9007W0W9007W
+WW64WW0WW64WW
+# map8
+0000800080000
+0004W604W6000
+0000-000-0000
+0004W604W6000
+0000200020000
+# map9
+W6004W0000008
+W6004W000007W
+W6004W00007WW
+2000020007WWW
+000000004WWWW
+# map10
+WW600000004WW
+--000000000--
+WW600000004WW
+--000000000--
+WW600000004WW
+# map11
+00004WWW60000
+0000022200000
+0000088800000
+00004WWW60000
+00004WWW60000
+# map12
+000007WW60000
+00004WWW60000
+00000---00000
+00004WWW60000
+00004WW300000
+# map13
+# property: 3,6 locked
+# property: 2,7 locked
+# property: 1,5 locked
+# property: 3,7 locked
+# property: 2,6 locked
+# property: 2,5 locked
+# property: 1,6 locked
+# property: 3,5 locked
+# property: 1,7 locked
+0000800080000
+0004W604W6000
+0004W604W6000
+0004W604W6000
+0000200020000
+# map14
+8080808080808
+WUW|W|WUW|W|W
+WWW|W|WWW|W|W
+2220202220202
+0000000000000
+# map15
+000004W600000
+000087W980000
+0004WWOWW6000
+000021W320000
+000004W600000
+# map16
+000004W600000
+000004W600000
+000004W600000
+000004W600000
+000004W600000
+# map17
+# property: 3,5 locked
+# property: 3,7 locked
+# property: 3,0 locked
+# property: 3,2 locked
+# property: 3,12 locked
+# property: 3,10 locked
+0800008000080
+7W9007W9007W9
+WOW64WOW64WOW
+1W3001W3001W3
+0200002000020
+# map18
+04W6008000000
+04W604W600000
+04W9882880808
+04WWWW|WW|W|W
+0022220220202
+# map19
+# property: 2,5 locked
+# property: 2,7 locked
+# property: 2,2 locked
+# property: 2,10 locked
+0880088800880
+4WW64WWW64WW6
+4W3001W3001W6
+0208802088020
+004WW604WW600
+# map20
+008800
+04WW60
+002200
+000000
+000000
+008800
+07WW90
+7WWWW9
+WW31WW
+# map21
+000000
+080080
+4W64W6
+4W94W6
+4WW|W6
+4W34W6
+4W64W6
+020020
+000000
+# map22
+000000
+000000
+008000
+07W900
+4WOW60
+4WWW60
+4W<200
+4WW600
+022000
+# map23
+000000
+000000
+008800
+07WW60
+4W<200
+4WW600
+4W<800
+01WW60
+002200
+# map24
+000000
+000000
+080000
+4W6000
+4W9000
+4WW900
+4WOW60
+4WW300
+022000
+# map25
+000000
+000000
+008800
+07WW90
+4W31W6
+4W97W6
+01WW30
+002200
+000000
+# map26
+# property: 5,4 locked
+# property: 2,1 locked
+# property: 5,1 locked
+# property: 2,4 locked
+000000
+000000
+000000
+000000
+000000
+000000
+000000
+000000
+000000
+# map27
+# property: 2,0 locked
+# property: 6,5 locked
+# property: 6,0 locked
+# property: 2,5 locked
+000000
+000000
+800008
+W9007W
+WW64WW
+W3001W
+200002
+000000
+000000
+# map28
+# property: 5,5 locked
+# property: 1,0 locked
+# property: 7,5 locked
+# property: 3,0 locked
+# property: 1,5 locked
+# property: 5,0 locked
+# property: 3,5 locked
+# property: 7,0 locked
+W6004W
+-0000-
+W6004W
+-0000-
+W6004W
+-0000-
+W6004W
+-0000-
+W6004W
+# map29
+# property: 5,4 locked
+# property: 2,1 locked
+# property: 5,1 locked
+# property: 2,4 locked
+4W64W6
+4W64W6
+0-00-0
+4W64W6
+4W64W6
+020020
+000000
+000000
+000000
+# map30
+# property: 2,2 locked
+# property: 2,3 locked
+# property: 6,2 locked
+# property: 6,3 locked
+# property: 4,2 locked
+# property: 4,3 locked
+008800
+04WW60
+00--00
+04WW60
+00--00
+04WW60
+00--00
+04WW60
+002200
+# map31
+# property: 4,4 locked
+# property: 3,1 locked
+# property: 4,1 locked
+# property: 3,4 locked
+000000
+008800
+04WW60
+002200
+800008
+W6004W
+W6004W
+200002
+000000
+# map32
+# property: 4,4 locked
+# property: 2,2 locked
+# property: 2,3 locked
+# property: 3,1 locked
+# property: 4,1 locked
+# property: 5,3 locked
+# property: 3,4 locked
+# property: 5,2 locked
+000000
+080080
+4W64W6
+020020
+080080
+4W64W6
+020020
+000000
+000000
+# map33
+# property: 3,3 locked
+# property: 3,2 locked
+# property: 3,1 locked
+# property: 3,0 locked
+# property: 3,5 locked
+# property: 3,4 locked
+000000
+000000
+000000
+000000
+000000
+000000
+808080
+W|W|W6
+W|W|W6
+# map34
+# property: 7,5 locked
+# property: 7,3 locked
+# property: 7,1 locked
+000000
+000000
+800008
+W6004W
+W6004W
+200002
+808080
+WUWUW9
+WWWWWW
+# map35
+# property: 6,4 locked
+# property: 6,1 locked
+000000
+000000
+080080
+4W64W6
+020020
+808808
+W|WW|W
+202202
+000000
+# map36
+# property: 0,0 locked
+# property: 4,5 locked
+# property: 4,0 locked
+# property: 0,5 locked
+# property: 8,0 locked
+# property: 8,5 locked
+800008
+W9007W
+WW64WW
+W3001W
+-0000-
+W9007W
+WW64WW
+W3001W
+200002
+# map37
+# property: 7,3 locked
+# property: 6,3 locked
+000000
+000000
+008800
+04WW90
+002>W6
+007W30
+04W300
+04W980
+04WWW6
+# map38
+# property: 5,5 locked
+# property: 4,5 locked
+000000
+000000
+008800
+07WW90
+4WWOW6
+4WOWW6
+01WW30
+002200
+000000
+# map39
+# property: 6,2 locked
+# property: 7,2 locked
+# property: 5,2 locked
+# property: 8,2 locked
+000000
+000000
+000800
+007W60
+04WW60
+001W60
+004W60
+004W60
+004W60
+# map40
+# property: 4,2 locked
+# property: 4,3 locked
+# property: 5,2 locked
+000000
+000000
+008800
+07WW90
+4W3>W6
+027W30
+07W300
+4W<880
+4WWWW6
+# map41
+# property: 5,4 locked2
+# property: 2,1 locked2
+# property: 5,1 locked2
+# property: 2,4 locked2
+000000
+000000
+000000
+000000
+000000
+000000
+000000
+000000
+000000
+# map42
+# property: 5,5 locked2
+# property: 1,0 locked2
+# property: 7,5 locked2
+# property: 3,0 locked2
+# property: 1,5 locked2
+# property: 5,0 locked2
+# property: 3,5 locked2
+# property: 7,0 locked2
+W6004W
+-0000-
+W6004W
+-0000-
+W6004W
+-0000-
+W6004W
+-0000-
+W6004W
+# map43
+# property: 6,4 locked2
+# property: 6,1 locked2
+000000
+080080
+4W64W6
+020020
+000000
+000000
+808808
+W|WW|W
+W|WW|W
+# map44
+# property: 3,3 locked
+# property: 6,2 locked
+# property: 5,3 locked2
+# property: 4,2 locked2
+000000
+000000
+008000
+04W900
+00>W60
+04W<00
+001W60
+000200
+000000
+# map45
+# property: 2,2 locked2
+# property: 2,0 locked2
+# property: 2,4 locked2
+000000
+000000
+000000
+000008
+00007W
+0007WW
+007WWW
+07WWWW
+4WWWWW
+# map46
+# property: 4,4 locked2
+# property: 4,1 locked2
+000000
+000000
+000000
+808808
+W|WW|W
+202202
+000000
+000000
+000000
+# map47
+# property: 2,1 locked2
+# property: 2,4 locked2
+4W64W6
+4W64W6
+0-00-0
+4W64W6
+4W64W6
+020020
+000000
+080080
+4W64W6
+# map48
+# property: 2,1 locked2
+# property: 2,4 locked2
+# property: 5,3 locked2
+# property: 5,2 locked2
+4W64W6
+4W64W6
+020020
+000000
+000000
+808808
+W|WW|W
+W6224W
+W6004W
+# map49
+# property: 3,2 locked2
+# property: 4,3 locked2
+000000
+080080
+4W67W6
+027W30
+07W380
+4W34W6
+020020
+000000
+000000
+# map50
+# property: 4,4 locked2
+# property: 6,4 locked2
+# property: 4,1 locked2
+# property: 6,1 locked2
+080080
+4W64W6
+4W64W6
+4W64W6
+020020
+008800
+04WW60
+80--08
+W|WW|W

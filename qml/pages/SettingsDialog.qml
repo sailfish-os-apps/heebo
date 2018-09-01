@@ -85,10 +85,12 @@ Dialog
             label: "map"
             anchors.horizontalCenter: parent.Center
             minimumValue: 1
-            maximumValue: 2
+            maximumValue: mapset.doWeHaveSavedMaps() ? 4 : 3
             value: map
             stepSize: 1
-            valueText: (value == 1) ? "Standard" : "Extras"
+            valueText: (value == 1) ? "Standard" :
+                       (value == 2 ) ? "Extras" :
+                       (value == 3) ? "Landscape" : "Your saved ones"
         }
 
         SectionHeader

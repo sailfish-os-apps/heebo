@@ -32,22 +32,30 @@ class GameMapSet : public QObject {
              NOTIFY levelChanged
              WRITE setLevel)
   Q_PROPERTY(int numLevels
-             READ numLevels)
+             READ numLevels
+             NOTIFY numLevelsChanged)
   Q_PROPERTY(bool onLastLevel
-             READ onLastLevel)
+             READ onLastLevel
+             NOTIFY onLastLevelChanged)
+  Q_PROPERTY(int height READ height NOTIFY heightChanged)
+  Q_PROPERTY(int width READ width NOTIFY widthChanged)
+  Q_PROPERTY(int nextSaveLevel READ nextSaveLevel NOTIFY nextSaveLevelChanged)
   
 public:
-  explicit GameMapSet(int width, int height, QObject* parent=0);
-  explicit GameMapSet(const QString& fileName, int initialLevel,
+  explicit GameMapSet(int mapNumber, int initialLevel,
                       QObject* parent=0);
 
   void save(const QString& fileName="");
   
   QString fileName() const { return m_fileName; }
   int level() const;
+  int mapNumber() const { return m_map; }
   int setLevel(int l);
   int numLevels() const { return m_number; }
   bool onLastLevel() const { return m_level == m_number-1; }
+  int height() const { return m_height; }
+  int width() const { return m_width; }
+  int nextSaveLevel();
 
   GameMap* newMap(int);
   void removeMap(int);
@@ -62,6 +70,9 @@ public:
   Q_INVOKABLE void writeOtherSettings(bool penalty, bool particles);
   Q_INVOKABLE bool getPenaltyMode();
   Q_INVOKABLE bool getParticlesMode();
+  Q_INVOKABLE int saveCurrentMap();
+  Q_INVOKABLE bool doWeHaveSavedMaps();
+  Q_INVOKABLE void loadMaps();
 
 public slots:
   QString at(int r, int c) const;
@@ -71,10 +82,15 @@ public slots:
 
 signals:
   void levelChanged();
+  void heightChanged();
+  void widthChanged();
   void quitHeebo();
+  void nextSaveLevelChanged();
+  void numLevelsChanged();
+  void onLastLevelChanged();
 
 private:
-  void loadMap();
+  int loadMap(QString filename = "");
 
   bool OK(int);
 

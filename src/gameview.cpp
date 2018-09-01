@@ -31,7 +31,7 @@ GameView::GameView(QQuickView *view) : QQuickView(), view(view) {
 
   readSettings();
 
-  m_mapset = new GameMapSet(SailfishApp::pathTo(QString("data/map%1.dat").arg(m_mapNumber)).toLocalFile(), m_level, this);
+  m_mapset = new GameMapSet(m_mapNumber, m_level, this);
 
   connect(m_mapset, SIGNAL(levelChanged()), this, SLOT(onLevelChanged()));
   connect(m_mapset, SIGNAL(quitHeebo()), this, SLOT(quitApp()));
@@ -56,7 +56,7 @@ void GameView::writeSettings()
   QSettings s("harbour-heebo", "harbour-heebo");
   s.beginGroup("Mapset");
   s.setValue("level", m_mapset->level());
-  s.setValue("map", m_mapNumber);
+  s.setValue("map", m_mapset->mapNumber());
   s.endGroup();
 }
 

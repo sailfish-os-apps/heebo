@@ -60,7 +60,7 @@ Item {
         
         width: jewel.width; height: jewel.width
 
-        source: "image://jewels/" + typeName + (mainPage.isRunning && type?"_eyeshut":"") + "?" + width
+        source: "image://jewels/" + typeName + (((mainPage.isRunning && type) || selected) ? "_eyeshut":"") + "?" + width
         opacity: 1
 
         smooth: true
@@ -108,6 +108,26 @@ Item {
         velocity: AngleDirection {angleVariation: 360; magnitude: 70; magnitudeVariation: 40}
         size: Theme.iconSizeSmall * 0.5
         group: typeName
+    }
+
+    function wink()
+    {
+        winkTimer.loops = 5;
+        winkTimer.restart();
+        particles.burst(20);
+    }
+
+    Timer
+    {
+        property int loops: 5
+        id: winkTimer
+        interval: 200
+        onTriggered:
+        {
+            selected = !selected
+            if (loops--)
+                restart();
+        }
     }
 
     function moveToBlock(pt) {

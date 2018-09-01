@@ -25,10 +25,6 @@ QtObject
     // Number of different "jewel" types
     property int jewel_maxtype: 5
 
-    // Board size
-    property int board_width: 6
-    property int board_height: 9
-
     // Pixels to drag/swipe until it's interpreted as a movement
     property int move_limit: block_width/10
 

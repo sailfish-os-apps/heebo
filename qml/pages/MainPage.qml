@@ -49,7 +49,7 @@ Page {
     signal jewelKilled();
 
     Component.onCompleted: {
-        constants.block_width = Math.min(width / constants.board_width, (height - constants.toolbar_height) / constants.board_height)
+        constants.block_width = Math.min(width / mapset.width, (height - constants.toolbar_height) / mapset.height)
         constants.block_height = constants.block_width
         console.log("block size is " + constants.block_height + " x " + constants.block_width)
 
@@ -85,12 +85,13 @@ Page {
 
         property ParticleSystem ps: particleSystem
 
-        width: constants.board_width * constants.block_width
+        width: mapset.width * constants.block_width
         anchors { bottom: parent.bottom; top: toolBar.bottom; horizontalCenter: parent.horizontalCenter}
 
         MouseArea {
             anchors.fill: parent
-            onPressed: Jewels.mousePressed(mouse.x, mouse.y)
+            onPressed: Jewels.mousePressed(mouse.x, mouse.y, false)
+            onPressAndHold: Jewels.mousePressed(mouse.x, mouse.y, true)
             onPositionChanged: if (pressed) Jewels.mouseMoved(mouse.x, mouse.y)
         }
 
@@ -280,14 +281,26 @@ Page {
             anchors.verticalCenter: menuButton.verticalCenter
         }
 
+		Button
+		{
+			id: editmodeSave
+			width: Theme.buttonWidthSmall/2
+			anchors.right: editmodeSelectButton.left
+            anchors.rightMargin: Theme.paddingSmall
+            anchors.verticalCenter: menuButton.verticalCenter
+            visible: editorMode
+            text: "Save '" + (mapset.nextSaveLevel + 1) + "'"
+            onClicked: Jewels.saveCurrentMap()
+		}
         Button
         {
             id: editmodeSelectButton
+			width: Theme.buttonWidthSmall/2
             anchors.right: editormodeLabel.left
-            anchors.rightMargin: Theme.paddingLarge
+            anchors.rightMargin: Theme.paddingSmall
             anchors.verticalCenter: menuButton.verticalCenter
             visible: editorMode
-            text: "Toggle mode"
+            text: "Mode"
             onClicked: editorModeBlock = !editorModeBlock
         }
         Label
@@ -344,7 +357,7 @@ Page {
 
         source: "../images/main_menu_bg.png"
 
-        scale: (0.6 * parent.width) / sourceSize.width
+        scale: Math.min((0.8 * parent.height) / sourceSize.height, (0.6 * parent.width) / sourceSize.width)
 
         signal closed
 

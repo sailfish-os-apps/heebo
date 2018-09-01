@@ -47,7 +47,7 @@ Image {
     visible: opacity > 0
 
     source: "../images/dialog_small.png"
-    scale: (0.6 * parent.width) / sourceSize.width
+    scale: Math.min((0.8 * parent.height) / sourceSize.height, (0.6 * parent.width) / sourceSize.width)
     smooth: true
         
     Text {

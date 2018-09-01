@@ -22,20 +22,19 @@
 
 //------------------------------------------------------------------------------
 
-GameMapSet::GameMapSet(int width, int height, QObject* parent) :
-  QObject(parent), m_width(width), m_height(height), m_number(0), m_level(-1)
-{
-}
-
-//------------------------------------------------------------------------------
-
-GameMapSet::GameMapSet(const QString& fileName, int initialLevel,
+GameMapSet::GameMapSet(int mapNumber, int initialLevel,
                        QObject* parent) :
   QObject(parent),
-  m_fileName(fileName)
+  m_map(mapNumber)
 {
-    qDebug() << "Loading map: " << m_fileName;
-    loadMap();
+    if (m_map == 4 && !doWeHaveSavedMaps())
+    {
+        qWarning() << "No saved maps, fallback to map 1";
+        m_map = 1;
+    }
+
+    qDebug() << "Loading map: " << m_map;
+    loadMaps();
 
     /* If we try to open nonexisting level, start from first level */
     if (initialLevel >= m_number)
@@ -44,7 +43,6 @@ GameMapSet::GameMapSet(const QString& fileName, int initialLevel,
     setLevel(initialLevel);
 
     /* Following values are read from settings if they are -1 */
-    m_map = -1;
     m_penalty = -1;
     m_particles = -1;
 }
@@ -67,13 +65,19 @@ bool GameMapSet::OK(int l)
 
 int GameMapSet::setLevel(int l)
 {
-  if (l != m_level && OK(l))
-  {
-    m_level = l;
-    emit levelChanged();
-  }
+    if (OK(l))
+        m_level = l;
+    else
+        m_level = 1;
 
-  return m_level;
+    m_width = m_maps[m_level]->width();
+    m_height = m_maps[m_level]->height();
+
+    emit heightChanged();
+    emit widthChanged();
+    emit levelChanged();
+
+    return m_level;
 }
 //------------------------------------------------------------------------------
 
@@ -102,15 +106,65 @@ QString GameMapSet::prop(int r, int c) const
 }
 
 //------------------------------------------------------------------------------
-
-void GameMapSet::loadMap()
+void GameMapSet::loadMaps()
 {
-  QFile fp(m_fileName);
+    if (m_map == 4 && doWeHaveSavedMaps()) // Your saved ones
+    {
+        m_number = 0;
+        m_maps.clear();
+
+        QDir heebodir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+
+        if (!heebodir.exists())
+        {
+            heebodir.mkpath(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+        }
+
+        QFileInfoList myMaps = heebodir.entryInfoList(QStringList() << "*.dat", QDir::Files, QDir::Name);
+
+        foreach(QFileInfo fi, myMaps)
+        {
+            m_number += loadMap(fi.absoluteFilePath());
+            qDebug() << "We have now" << m_number << "loaded maps";
+        }
+    }
+    else
+    {
+        m_fileName = SailfishApp::pathTo(QString("data/map%1.dat").arg(m_map)).toLocalFile();
+        m_maps.clear();
+
+        m_number = loadMap();
+    }
+
+    if (m_level >= m_number)
+        m_level = 0;
+
+    emit onLastLevelChanged();
+    emit numLevelsChanged();
+}
+//------------------------------------------------------------------------------
+
+int GameMapSet::loadMap(QString filename)
+{
+    int numMaps = 0;
+
+    QFile fp;
+
+    if (filename.isEmpty())
+    {
+        fp.setFileName(m_fileName);
+    }
+    else
+    {
+        fp.setFileName(filename);
+    }
+
+    qDebug() << "Opening map from " << fp.fileName();
 
   if (!fp.open(QIODevice::ReadOnly))
   {
-    qCritical() << "Cannot open map file:" << m_fileName;
-    return;
+    qCritical() << "Cannot open map file:" << fp.fileName();
+    return 0;
   }
 
   QTextStream in(&fp);
@@ -130,18 +184,20 @@ void GameMapSet::loadMap()
     else if (n==2)
       m_height = line.toInt(&ok);
     else if (n==3) {
-      m_number = line.toInt(&ok);
+      numMaps = line.toInt(&ok);
       break;
     }
   }
 
-  qDebug() << "Reading maps: " << m_number << "Height: " << m_height << "Width: " << m_width;
+  qDebug() << "Reading maps: " << numMaps << "Height: " << m_height << "Width: " << m_width;
 
-  for (int i=0; i<m_number; i++)
+  for (int i=0; i<numMaps; i++)
   {
     GameMap* gm = GameMap::fromTextStream(in, m_width, m_height);
     m_maps.append(gm);
   }
+
+  return numMaps;
 }
 
 //------------------------------------------------------------------------------
@@ -175,6 +231,43 @@ void GameMapSet::save(const QString& fileName)
     out << "# map" << i+1 << "\n";
     m_maps[i]->save(out);
   }
+}
+
+//------------------------------------------------------------------------------
+int GameMapSet::saveCurrentMap()
+{    
+	QDir heebodir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+	
+    if (!heebodir.exists()) 
+	{
+        heebodir.mkpath(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+	}
+
+    int n = nextSaveLevel();
+	
+    QFile fp(heebodir.path() + QString("/map_%1.dat").arg(n, 5, 10, QChar('0')));
+	
+	if (!fp.open(QIODevice::WriteOnly | QIODevice::Text))
+	{
+        qCritical() << "Unable to open" << fp.fileName() << "for write";
+        return -1;
+	}
+
+	QTextStream out(&fp);
+
+	out << "# Heebo game map set.\n";
+	out << "# width\n" << m_width << "\n";
+	out << "# height\n" << m_height << "\n";
+	out << "# number of maps\n1\n";
+  
+    out << "# map" << m_level+1 << "\n";
+    m_maps[m_level]->save(out);
+	
+	fp.close();
+
+    emit nextSaveLevelChanged();
+
+    return n+1;
 }
 
 //------------------------------------------------------------------------------
@@ -255,12 +348,29 @@ void GameMapSet::writeNewMap(int map)
 
   m_map = map;
 
-  m_fileName = SailfishApp::pathTo(QString("data/map%1.dat").arg(m_map)).toLocalFile();
-  m_level = 0;
-  m_maps.clear();
+  loadMaps();
 
-  loadMap();
   setLevel(m_level);
+}
+
+//------------------------------------------------------------------------------
+bool GameMapSet::doWeHaveSavedMaps()
+{
+    return (nextSaveLevel() > 0);
+}
+
+int GameMapSet::nextSaveLevel()
+{
+    QDir heebodir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+
+    if (heebodir.exists())
+    {
+        return heebodir.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 //------------------------------------------------------------------------------

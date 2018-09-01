@@ -41,6 +41,11 @@ var playerMovement = false;
 var finalAnim = 0;
 var finalDeleted = 0;
 
+var justSavedLevel = -1;
+
+var possibleMove = null;
+
+
 //-----------------------------------------------------------------------------
 // Utility functions, object constructors
 //-----------------------------------------------------------------------------
@@ -88,7 +93,7 @@ var point = function (spec) {
 
     that.insideGrid = function () {
         return that.x >= 0 && that.y >= 0 &&
-            that.x < constants.board_width && that.y < constants.board_height;
+            that.x < mapset.width && that.y < mapset.height;
     };
 
     return that;
@@ -109,8 +114,11 @@ var gridObject = function (grid, pt) {
 var init2DArray = function (arr) {
     // Destroy old 2d array if there is such
     if (arr !== undefined) {
-        for (var i=0; i<constants.board_width; i++) {
-            for (var j=0; j<constants.board_height; j++) {
+        var arrh = arr.length;
+        var arrw = arr[0].length;
+
+        for (var i=0; i<arrw; i++) {
+            for (var j=0; j<arrh; j++) {
                 if (arr[j][i] !== undefined) {
                     arr[j][i].destroy();
                     arr[j][i] = undefined;
@@ -120,9 +128,9 @@ var init2DArray = function (arr) {
         delete arr;
     }
     
-    arr = new Array(constants.board_height);
-    for (var j=0; j<constants.board_height; j++)
-        arr[j] = new Array(constants.board_width);
+    arr = new Array(mapset.height);
+    for (var j=0; j<mapset.height; j++)
+        arr[j] = new Array(mapset.width);
     return arr;
 };
 
@@ -187,6 +195,10 @@ var updateBestTime = function () {
 
 // Starts new level
 var startNewGame = function () {
+
+    constants.block_width = Math.min(width / mapset.width, (height - constants.toolbar_height) / mapset.height)
+    constants.block_height = constants.block_width
+
     currentLevelText.text = mapset.level+1;
     mainPage.currentElapsedTime = 0;
     currentBestTimeText.text = getHighScore(mapset.level);
@@ -197,14 +209,14 @@ var startNewGame = function () {
     playerMovement = false;
     initBoard();
 
-    for (var j=0; j<constants.board_height; j++)
-        for (var i=0; i<constants.board_width; i++)
+    for (var j=0; j<mapset.height; j++)
+        for (var i=0; i<mapset.width; i++)
             newBackgroundBlock(j, i);
 
     unclearedPoints = [];
 
-    for (var j=0; j<constants.board_height; j++) {
-        for (var i=0; i<constants.board_width; i++) {
+    for (var j=0; j<mapset.height; j++) {
+        for (var i=0; i<mapset.width; i++) {
             var b = mapset.at(j,i);
             if (b === 'W') {
                 bg_grid[j][i].blocking = true;
@@ -215,8 +227,8 @@ var startNewGame = function () {
         }
     }
 
-    for (var j=0; j<constants.board_height; j++) {
-        for (var i=0; i<constants.board_width; i++) {
+    for (var j=0; j<mapset.height; j++) {
+        for (var i=0; i<mapset.width; i++) {
             if (bg_grid[j][i].blocking) {
                 continue;
             }
@@ -302,6 +314,7 @@ var prevLevel = function () {
 var changeMap = function(map) {
     console.log("Trying to change map " + map)
     mapset.writeNewMap(map);
+
     startNewGame();
 }
 
@@ -337,8 +350,8 @@ var victoryCheck = function () {
         return;
 
     var victory = true;
-    for (var j=0; j<constants.board_height && victory; j++) {
-        for (var i=0; i<constants.board_width && victory; i++) {
+    for (var j=0; j<mapset.height && victory; j++) {
+        for (var i=0; i<mapset.width && victory; i++) {
             victory =
                 bg_grid[j][i].cleared || bg_grid[j][i].blocking;
         }
@@ -349,8 +362,8 @@ var victoryCheck = function () {
             finalAnim = 1;
             finalDeleted = 1000;
             var counter = 0;
-            for (j=0; j<constants.board_height; j++) {
-                for (i=0; i<constants.board_width; i++) {
+            for (j=0; j<mapset.height; j++) {
+                for (i=0; i<mapset.width; i++) {
                     if (!bg_grid[j][i].blocking && board[j] && board[j][i] &&
                         board[j][i].dying === false) {
                         var obj = board[j][i];
@@ -390,8 +403,8 @@ var victoryCheck = function () {
 // Checks if there are still animations running
 var isRunning = function () {
     var running = false;
-    for (var j=0; j<constants.board_height && !running; j++) {
-        for (var i=0; i<constants.board_width && !running; i++) {
+    for (var j=0; j<mapset.height && !running; j++) {
+        for (var i=0; i<mapset.width && !running; i++) {
             var obj = board[j][i];
             if (obj === undefined)
                 continue;
@@ -451,9 +464,9 @@ var clearRandomBlock = function (block_type, count) {
 // Check if blocks should fall down
 var fallDown = function () {
     var changes = 0;
-    for (var i=0; i<constants.board_width; i++) {
+    for (var i=0; i<mapset.width; i++) {
         var fallDist = 0;
-        for (var j=constants.board_height-1; j>=0; j--) {
+        for (var j=mapset.height-1; j>=0; j--) {
             if (bg_grid[j][i].blocking) {
                 fallDist = 0;
             } else if (board[j][i] === undefined) {
@@ -481,7 +494,7 @@ var fallDown = function () {
 // rows is true for checking row, false for column
 var checkSubsequentLine = function(j, rows, mark) {
     var last_b = 0, count = 0, changes = 0, i;
-    var imax = rows ? constants.board_width : constants.board_height;
+    var imax = rows ? mapset.width : mapset.height;
 
     for (i=0; i<imax; i++) {
         var obj = rows ? board[j][i] : board[i][j];
@@ -534,7 +547,7 @@ var checkSubsequentLine = function(j, rows, mark) {
 
 var checkSubsequentOnRows = function (mark) {
     var changes = 0, j;
-    for (j=0; j<constants.board_height; j++) {
+    for (j=0; j<mapset.height; j++) {
         changes += checkSubsequentLine(j, true, mark);
     }
     return changes;
@@ -544,7 +557,7 @@ var checkSubsequentOnRows = function (mark) {
 
 var checkSubsequentOnColumns = function (mark) {
     var changes = 0, i;
-    for (i=0; i<constants.board_width; i++) {
+    for (i=0; i<mapset.width; i++) {
         changes += checkSubsequentLine(i, false, mark);
     }
     return changes;
@@ -567,8 +580,8 @@ var checkForSubsequentJewels = function (mark) {
         return changes;
 
     // Do actual removal
-    for (var j=0; j<constants.board_height; j++) {
-        for (var i=0; i<constants.board_width; i++) {
+    for (var j=0; j<mapset.height; j++) {
+        for (var i=0; i<mapset.width; i++) {
             var obj = board[j][i];
             if (obj !== undefined && obj.to_remove) {
                 board[j][i] = undefined;
@@ -633,8 +646,8 @@ var checkMoves = function () {
     var di, dj;
     var pt;
     
-    for (i=0; i<constants.board_width; i++) {
-        for (j=0; j<constants.board_height; j++) {
+    for (i=0; i<mapset.width; i++) {
+        for (j=0; j<mapset.height; j++) {
             pt = point({x: i, y: j});
             obj = gridObject(board, pt);
 
@@ -643,24 +656,29 @@ var checkMoves = function () {
                 continue;
             
             if (checkSingleStep(obj, pt, -1,  0)) {
+                possibleMove = pt;
                 // console.log("CANMOVE: "+pt.str()+" left");
                 return true;
             }
             if (checkSingleStep(obj, pt,  1,  0)) { 
+                possibleMove = pt;
                 // console.log("CANMOVE: "+pt.str()+" right");
                 return true;
             }
             if (checkSingleStep(obj, pt,  0, -1)) {
+                possibleMove = pt;
                 // console.log("CANMOVE: "+pt.str()+" up");
                 return true;
             }
             if (checkSingleStep(obj, pt,  0,  1)) {
+                possibleMove = pt;
                 // console.log("CANMOVE: "+pt.str()+" down");
                 return true;
             }
         }
     }
     
+    possibleMove = null;
     return false;
 };
 
@@ -682,9 +700,9 @@ var checkMovesAndReport = function () {
 
 // Checks if new blocks need to be spawned
 var spawnNewJewels = function () {
-    for (var i=0; i<constants.board_width; i++) {
+    for (var i=0; i<mapset.width; i++) {
         var n=0;
-        while (n<constants.board_height && board[n][i] === undefined &&
+        while (n<mapset.height && board[n][i] === undefined &&
                bg_grid[n][i].blocking === false)
             n++;
 
@@ -711,8 +729,8 @@ var spawnNewJewels = function () {
 var penalty = function () {
     do
     {
-        var n = random(1, constants.board_height-1); // Locking on top row is too cruel
-        var i = random(0, constants.board_width-1);
+        var n = random(1, mapset.height-1); // Locking on top row is too cruel
+        var i = random(0, mapset.width-1);
     }
     while (board[n][i] === undefined || bg_grid[n][i].blocking === true);
 
@@ -790,8 +808,8 @@ var onChanges = function () {
 
 var reshuffleBlocks = function () {
     var obj;
-    for (var j=0; j<constants.board_height; j++) {
-        for (var i=0; i<constants.board_width; i++) {
+    for (var j=0; j<mapset.height; j++) {
+        for (var i=0; i<mapset.width; i++) {
             obj = gridObject(board, point({x:i, y:j}));
             if (obj === undefined)
                 continue;
@@ -823,6 +841,15 @@ var dialogClosed = function (mode) {
         tintRectangle.hide();
         startNewGame();
         break;
+    case 5:
+        tintRectangle.hide();
+        mapset.loadMaps();
+        editorMode = false;
+        setLevel(justSavedLevel);
+        break;
+    case 6:
+        tintRectangle.hide();
+        break;
     default:
         console.log("dialogClosed("+mode+"): unknown dialog mode.");
     }
@@ -831,12 +858,24 @@ var dialogClosed = function (mode) {
 //-----------------------------------------------------------------------------
 
 // Called when user presses mouse button or taps down
-var mousePressed = function (x, y) {
+var mousePressed = function (x, y, hold) {
     if (playerMovement) {
         if (!isRunning()) {
             // console.log("Weird: playerMovement===true but isRunning()===false");
             playerMovement=false;
         }
+        return;
+    }
+
+    if (hold === true)
+    {
+        checkMoves();
+        if (possibleMove != null)
+        {
+            var o = gridObject(board, possibleMove);
+            o.wink();
+        }
+
         return;
     }
 
@@ -927,8 +966,8 @@ var updateBorders = function ()
     updateBorder(dx-1, dy)
     updateBorder(dx+1, dy)
 
-    for (var j=0; j<constants.board_height; j++) {
-        for (var i=0; i<constants.board_width; i++) {
+    for (var j=0; j<mapset.height; j++) {
+        for (var i=0; i<mapset.width; i++) {
             var b = mapset.at(j,i);
             if (b === 'W')
             {
@@ -1041,4 +1080,24 @@ var mouseMoved = function (x, y) {
         moving2.obj.moveToBlock(moving1.bpt);
     }
 };
+
+//-----------------------------------------------------------------------------
+
+var saveCurrentMap = function()
+{
+    console.log("saving");
+
+    justSavedLevel = mapset.saveCurrentMap()
+
+    if (justSavedLevel != -1)
+    {
+        okDialog.mode = 5;
+        okDialog.show("Map saved succesfully,\nLets play!", "");
+    }
+    else
+    {
+        okDialog.mode = 6;
+        okDialog.show("Failed to save map!", "");
+    }
+}
 
